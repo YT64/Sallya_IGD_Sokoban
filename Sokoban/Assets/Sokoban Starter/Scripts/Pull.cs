@@ -88,7 +88,7 @@ public class Pull : MonoBehaviour
         {
             if (objToStick.transform.position.x == newpos.x && objToStick.transform.position.y == newpos.y)
             {
-                print("MeetUp");
+
                 return true;
             }
         }

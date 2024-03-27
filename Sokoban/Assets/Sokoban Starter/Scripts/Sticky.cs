@@ -10,7 +10,7 @@ public class Sticky : MonoBehaviour
     private GameObject[] ObjToPull;
     private GameObject[] ObjToStick;
 
-    void Start()
+    void Start() 
     {
         ObjToBlock = GameObject.FindGameObjectsWithTag("Wall");
         ObjToPush = GameObject.FindGameObjectsWithTag("Smooth");

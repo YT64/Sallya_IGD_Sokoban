@@ -51,10 +51,10 @@ public class Player : MonoBehaviour
         }
         direction.Normalize();
 
-        // Get the current position
+
         Vector2 currentPosition = transform.position;
 
-        // Calculate the new position
+
         Vector2 newPosition = currentPosition + direction;
 
         float minX = -5f; 
@@ -76,7 +76,7 @@ public class Player : MonoBehaviour
             {
                 if (blockToPull != null)
                 {
-                    // If the player is moving away from the Clingy block, try to move the block along with the player
+
                     if ((direction.x < 0 && blockToPull.transform.position.x > currentPosition.x) ||
                         (direction.x > 0 && blockToPull.transform.position.x < currentPosition.x) ||
                         (direction.y < 0 && blockToPull.transform.position.y > currentPosition.y) ||
@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
                 }
             }
 
-            // If movement is allowed, move the player
+
             float moveDistance = 0.5f;
             transform.Translate(direction * moveDistance);
             return true;
@@ -137,21 +137,20 @@ public class Player : MonoBehaviour
             {
                 Vector2 objPosition = objToPull.transform.position;
     
-                // Calculate the position adjacent to the player in the direction of movement
+
                 Vector2 adjacentPosition = position + direction;
     
-                // Calculate the distance between the player and the block
+
                 float distance = Vector2.Distance(objPosition, position);
     
-                // Check if the player is adjacent to the block
-                if (Mathf.Approximately(distance, 1.0f)) // Assuming 1.0f is the distance when the player is adjacent
+                if (Mathf.Approximately(distance, 1.0f)) 
                 {
                 if (objPosition == newpos)
                 {
                     print("Cannot move: Clingy block in the way");
                     return true;
                 }
-                // If the player is adjacent and moving towards or opposite to the block, allow the block to move
+                
                 if ((direction.x < 0 && objPosition.x > position.x) ||
                         (direction.x > 0 && objPosition.x < position.x) ||
                         (direction.y < 0 && objPosition.y > position.y) ||
@@ -180,27 +179,41 @@ public class Player : MonoBehaviour
         foreach (var objToStick in ObjToStick)
         {
             Vector2 objPosition = objToStick.transform.position;
-            // Calculate the distance between the player and the block
             float distance = Vector2.Distance(objPosition, position);
 
             if (Mathf.Approximately(distance, 1.0f))
             {
-                if (Mathf.Abs(objPosition.x - position.x) <= 1 && Mathf.Abs(objPosition.y - position.y) <= 1)
+
+                if (objPosition == newpos)
                 {
-                    Push objtopush = objToStick.GetComponent<Push>();
-                    if (objtopush && objtopush.Move(direction))
+
+                    if (!Blocked(objPosition, direction, out GameObject _))
                     {
-                        return false;
-                    }
-                    else
-                    {
-                        blockToPull = objToStick;
+                        print("Cannot move: Sticky block in the way");
+                        return true;
                     }
                 }
-            }
-            
 
-            
+
+                if ((direction.x > 0 && objPosition.x == position.x + 1) ||
+                    (direction.x < 0 && objPosition.x == position.x - 1) ||
+                    (direction.y > 0 && objPosition.y == position.y + 1) ||
+                    (direction.y < 0 && objPosition.y == position.y - 1))
+                {
+                    if (!Blocked(objPosition, direction, out GameObject _))
+                    {
+                        Push objtopush = objToStick.GetComponent<Push>();
+                        print("Sticky Pushing");
+                        return false;
+                    }
+                }
+
+                else
+                {
+                    blockToPull = objToStick;
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -210,16 +223,14 @@ public class Player : MonoBehaviour
     {
         Vector2 blockNewPos = (Vector2)blockToPull.transform.position + direction;
     
-        // Check if the new position of the block is within the boundaries and not blocked
+
         if (blockNewPos.x >= -5f && blockNewPos.x <= 5f && blockNewPos.y >= -2.5f && blockNewPos.y <= 2.5f)
         {
-            // Move the block
             blockToPull.transform.Translate(direction * 0.5f);
             return true;
         }   
         else
         {
-            // The block cannot be moved
             return false;
     
         }
