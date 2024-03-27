@@ -8,12 +8,15 @@ public class Sticky : MonoBehaviour
     private GameObject[] ObjToPush;
     public GridObject gridObject;
     private GameObject[] ObjToPull;
+    private GameObject[] ObjToStick;
 
     void Start()
     {
         ObjToBlock = GameObject.FindGameObjectsWithTag("Wall");
         ObjToPush = GameObject.FindGameObjectsWithTag("Smooth");
         ObjToPull = GameObject.FindGameObjectsWithTag("Clingy");
+        ObjToStick = GameObject.FindGameObjectsWithTag("Sticky");
+
     }
 
     // Update is called once per frame
@@ -79,6 +82,13 @@ public class Sticky : MonoBehaviour
         foreach (var objToPush in ObjToPull)
         {
             if (objToPush.transform.position.x == newpos.x && objToPush.transform.position.y == newpos.y)
+            {
+                return true;
+            }
+        }
+        foreach (var objToStick in ObjToStick)
+        {
+            if (objToStick.transform.position.x == newpos.x && objToStick.transform.position.y == newpos.y)
             {
                 return true;
             }

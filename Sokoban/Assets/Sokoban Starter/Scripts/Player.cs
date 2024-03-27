@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
         ObjToBlock = GameObject.FindGameObjectsWithTag("Wall");
         ObjToPush = GameObject.FindGameObjectsWithTag("Smooth");
         ObjToPull = GameObject.FindGameObjectsWithTag("Clingy");
+        ObjToStick = GameObject.FindGameObjectsWithTag("Sticky");
 
     }
 
@@ -132,7 +133,7 @@ public class Player : MonoBehaviour
             }
         }
     
-            foreach (var objToPull in ObjToPull)
+        foreach (var objToPull in ObjToPull)
             {
                 Vector2 objPosition = objToPull.transform.position;
     
@@ -175,8 +176,34 @@ public class Player : MonoBehaviour
                     }
                 }
             }
-    
-            return false;
+
+        foreach (var objToStick in ObjToStick)
+        {
+            Vector2 objPosition = objToStick.transform.position;
+            // Calculate the distance between the player and the block
+            float distance = Vector2.Distance(objPosition, position);
+
+            if (Mathf.Approximately(distance, 1.0f))
+            {
+                if (Mathf.Abs(objPosition.x - position.x) <= 1 && Mathf.Abs(objPosition.y - position.y) <= 1)
+                {
+                    Push objtopush = objToStick.GetComponent<Push>();
+                    if (objtopush && objtopush.Move(direction))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        blockToPull = objToStick;
+                    }
+                }
+            }
+            
+
+            
+        }
+
+        return false;
     }
     
     private bool TryMoveBlock(GameObject blockToPull, Vector2 direction)
