@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
         ObjToBlock = GameObject.FindGameObjectsWithTag("Wall");
         ObjToPush = GameObject.FindGameObjectsWithTag("Smooth");
         ObjToPull = GameObject.FindGameObjectsWithTag("Clingy");
-        ObjToStick = GameObject.FindGameObjectsWithTag("Sticky");
+
     }
 
 
@@ -69,10 +69,9 @@ public class Player : MonoBehaviour
         else
         {
             GameObject blockToPull = null;
-            GameObject blockToStick = null;
 
 
-            if (Blocked(transform.position, direction, out blockToPull, out blockToStick))
+            if (Blocked(transform.position, direction, out blockToPull))
             {
                 if (blockToPull != null)
                 {
@@ -103,10 +102,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    public bool Blocked(Vector2 position, Vector2 direction, out GameObject blockToPull, out GameObject blockToStick)
+    public bool Blocked(Vector2 position, Vector2 direction, out GameObject blockToPull)
     {
         blockToPull = null;
-        blockToStick = null;
         Vector2 newpos = position + direction;
     
         foreach (var obj in ObjToBlock)
@@ -177,58 +175,7 @@ public class Player : MonoBehaviour
                     }
                 }
             }
-
-        foreach (var objToStick in ObjToStick)
-        {
-            Vector2 objPosition = objToStick.transform.position;
-
-            // Calculate the position adjacent to the player in the direction of movement
-            Vector2 adjacentPosition = position + direction;
-
-            // Calculate the distance between the player and the block
-            float distance = Vector2.Distance(objPosition, position);
-
-            // Check if the player is adjacent to the block
-            if (Mathf.Approximately(distance, 1.0f)) // Assuming 1.0f is the distance when the player is adjacent
-            {
-                if (objPosition == newpos)
-                {
-                    Push objtopush = objToStick.GetComponent<Push>();
-                    if (objtopush && objtopush.Move(direction))
-                    {
-                        print("Push!");
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                // If the player is adjacent and moving towards or opposite to the block, allow the block to move
-                if ((direction.x < 0 && objPosition.x > position.x) ||
-                        (direction.x > 0 && objPosition.x < position.x) ||
-                        (direction.y < 0 && objPosition.y > position.y) ||
-                        (direction.y > 0 && objPosition.y < position.y))
-                {
-                    if (objToStick.transform.position.x == newpos.x && objToStick.transform.position.y == newpos.y)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        print("Player moving towards or opposite to Clingy");
-                        blockToPull = objToStick;
-                        return true;
-                    }
-                }
-                else
-                {
-                    print("Player moving sideways next to Clingy");
-                    return false;
-                }
-            }
-        }
-
+    
             return false;
     }
     
@@ -248,25 +195,6 @@ public class Player : MonoBehaviour
             // The block cannot be moved
             return false;
     
-        }
-    }
-
-    private bool TryStickBlock(GameObject blockToPull, Vector2 direction)
-    {
-        Vector2 blockNewPos = (Vector2)blockToPull.transform.position + direction;
-
-        // Check if the new position of the block is within the boundaries and not blocked
-        if (blockNewPos.x >= -5f && blockNewPos.x <= 5f && blockNewPos.y >= -2.5f && blockNewPos.y <= 2.5f)
-        {
-            // Move the block
-            blockToPull.transform.Translate(direction * 0.5f);
-            return true;
-        }
-        else
-        {
-            // The block cannot be moved
-            return false;
-
         }
     }
 }
