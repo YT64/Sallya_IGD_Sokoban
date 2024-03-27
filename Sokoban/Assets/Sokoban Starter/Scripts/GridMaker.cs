@@ -70,7 +70,7 @@ public class GridMaker : MonoBehaviour
 
             //set the positions of the line renderer
             float xPos = _topLeft.x + (x * cellWidth);
-            line.SetPositions(new Vector3[] {new Vector3(xPos, _topLeft.y, 0), new Vector3(xPos, _bottomRight.y, 0)});
+            line.SetPositions(new Vector3[] { new Vector3(xPos, _topLeft.y, 0), new Vector3(xPos, _bottomRight.y, 0) });
         }
         for (int y = 0; y <= dimensions.y; y++)
         {
@@ -87,7 +87,7 @@ public class GridMaker : MonoBehaviour
             line.endColor = lineColor;
             line.startWidth = lineWidth;
             line.endWidth = lineWidth;
-            
+
             line.numCapVertices = 5;
 
             //set the material
@@ -95,7 +95,7 @@ public class GridMaker : MonoBehaviour
 
             //set the positions of the line renderer
             float yPos = _topLeft.y - (y * cellWidth);
-            line.SetPositions(new Vector3[] {new Vector3(_topLeft.x, yPos, 0), new Vector3(_bottomRight.x, yPos, 0)});
+            line.SetPositions(new Vector3[] { new Vector3(_topLeft.x, yPos, 0), new Vector3(_bottomRight.x, yPos, 0) });
         }
     }
 

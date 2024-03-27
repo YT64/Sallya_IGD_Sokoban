@@ -25,8 +25,8 @@ public class GridObject : MonoBehaviour
     [Button("Update Position")]
     private void UpdatePosition()
     {
-        float x = GridMaker.reference.TopLeft.x + GridMaker.reference.cellWidth * (gridPosition.x - 0.5f); 
+        float x = GridMaker.reference.TopLeft.x + GridMaker.reference.cellWidth * (gridPosition.x - 0.5f);
         float y = GridMaker.reference.TopLeft.y - GridMaker.reference.cellWidth * (gridPosition.y - 0.5f);
-        this.transform.position = new Vector3(x, y, 0); 
+        this.transform.position = new Vector3(x, y, 0);
     }
 }

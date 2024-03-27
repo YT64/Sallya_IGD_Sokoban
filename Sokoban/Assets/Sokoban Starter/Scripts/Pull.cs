@@ -12,7 +12,7 @@ public class Pull : MonoBehaviour
     {
         ObjToBlock = GameObject.FindGameObjectsWithTag("Wall");
         ObjToPush = GameObject.FindGameObjectsWithTag("Smooth");
-        ObjToPull = GameObject.FindGameObjectsWithTag("Sticky");
+        ObjToPull = GameObject.FindGameObjectsWithTag("Clingy");
     }
 
     // Update is called once per frame
@@ -23,14 +23,35 @@ public class Pull : MonoBehaviour
 
     public bool Move(Vector2 direction)
     {
-        if (ObjToBlocked(transform.position, direction))
+        // Get the current position
+        Vector2 currentPosition = transform.position;
+
+        // Calculate the new position
+        Vector2 newPosition = currentPosition + direction;
+
+        Debug.Log("New position: " + newPosition); ;
+
+        float minX = -5f;
+        float maxX = 5f;
+        float minY = -2.5f;
+        float maxY = 2.5f;
+
+        if (newPosition.x < minX || newPosition.x > maxX || newPosition.y < minY || newPosition.y > maxY)
         {
+            print("Cannot move: out of bounds");
             return false;
         }
         else
         {
-            transform.Translate(direction);
-            return true;
+            if (ObjToBlocked(transform.position, direction))
+            {
+                return false;
+            }
+            else
+            {
+                transform.Translate(direction);
+                return true;
+            }
         }
     }
 
@@ -47,6 +68,14 @@ public class Pull : MonoBehaviour
         }
 
         foreach (var objToPush in ObjToPush)
+        {
+            if (objToPush.transform.position.x == newpos.x && objToPush.transform.position.y == newpos.y)
+            {
+                return true;
+            }
+        }
+
+        foreach (var objToPush in ObjToPull)
         {
             if (objToPush.transform.position.x == newpos.x && objToPush.transform.position.y == newpos.y)
             {
